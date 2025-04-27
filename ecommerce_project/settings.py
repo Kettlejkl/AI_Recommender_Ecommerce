@@ -11,25 +11,25 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load environment variables from the .env file
+from dotenv import load_dotenv
+load_dotenv()
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
+# Environment variables
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'fallback_dev_secret')  # Default to a fallback secret in dev
+DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'  # Defaults to True for development
+ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost 127.0.0.1').split()
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-sacx7n841ay--z+$73$-m@k4h^lg#)u4(&i)njk(1s2j&4m1m7'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
+# Add your environment variables for MongoDB and OpenAI
+OPENAI_KEY = os.getenv("OPENAI_KEY", "default_openai_key")  # Example: 'dab82bcf11b83362167ef1634b859e6a'
+MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017/ecommerce_db")  # Example: MongoDB URI
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -52,8 +52,6 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'ecommerce_project.urls'
 
-import os
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -71,29 +69,22 @@ TEMPLATES = [
     },
 ]
 
-
 WSGI_APPLICATION = 'ecommerce_project.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
+# Database configuration
+# MongoDB configuration for Djongo
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
         'NAME': 'ecommerce_db',
         'ENFORCE_SCHEMA': False,
         'CLIENT': {
-            'host': 'mongodb+srv://mimestacio:EcmX2XYWryAI4kpW@cluster0.2eefl1w.mongodb.net/ecommerce_db?retryWrites=true&w=majority&appName=Cluster0',
+            'host': MONGO_URI,  # Use the environment variable here
         }
     }
 }
 
-
-
 # Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -109,25 +100,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
+# Localization settings
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
 STATIC_URL = 'static/'
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
