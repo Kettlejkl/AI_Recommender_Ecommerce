@@ -4,21 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Recommender Ecommerce</title>
+    <style>
+        .tag {
+            display: inline-block;
+            background-color: #f0f0f0;
+            padding: 4px 8px;
+            margin: 2px;
+            border-radius: 4px;
+            font-size: 0.8em;
+        }
+        .product-card {
+            border: 1px solid #ddd;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
     <h1>Product List</h1>
-    <ul>
+    
+    <div class="product-list">
         {% for product in products %}
-            <li>{{ product.name }} - P{{ product.price }}</li>
+            <div class="product-card">
+                <h3>{{ product.name }} - P{{ product.price }}</h3>
+                <p>{{ product.description }}</p>
+                <p>Category: {{ product.category }}</p>
+                <div class="tags">
+                    {% if product.tags %}
+                        <p>Tags: 
+                        {% for tag in product.tags %}
+                            <span class="tag">{{ tag }}</span>
+                        {% endfor %}
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
         {% endfor %}
-    </ul>
-
-    <h2>All Products</h2>
-    <ul>
-        {% for product in products %}
-            <li>{{ product.name }} - P{{ product.price }}</li>
-        {% endfor %}
-    </ul>
+    </div>
 
     <a href="{% url 'add_product' %}">Add New Product</a>
 
